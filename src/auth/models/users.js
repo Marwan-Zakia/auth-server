@@ -8,7 +8,7 @@ const userSchema = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
     username: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false, },
-    token: {type: DataTypes.VIRTUAL  }
+    token: {type: DataTypes.VIRTUAL }
   });
 
   model.beforeCreate(async (user) => {
@@ -25,7 +25,7 @@ const userSchema = (sequelize, DataTypes) => {
    
     if (valid) {
 
-      let newToken = jwt.sign({ username: user.username },SECRET);
+      let newToken = jwt.sign({ username: user.username },SECRET,{expiresIn:'1h'});
       user.token = newToken;
     return user;
     }
