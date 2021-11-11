@@ -6,14 +6,16 @@ const userSchema = require('./users.js');
 
 const DATABASE_URI = process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL;
 
-const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
+let sequelizeOptions = process.env.NODE_ENV === 'production' ? {
   dialectOptions: {
-    ssl: true,
-    rejectUnauthorized: false,
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    }
   }
-} : {}
+} : {};
 
-const sequelize = new Sequelize(DATABASE_URI, DATABASE_CONFIG);
+const sequelize = new Sequelize(DATABASE_URI, sequelizeOptions);
 
 module.exports = {
   db: sequelize,
