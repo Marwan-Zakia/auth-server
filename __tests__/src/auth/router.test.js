@@ -15,28 +15,28 @@ let users = {
 };
 
 setTimeout(()=>{
-beforeAll(async (done) => {
+beforeAll(async () => {
   await db.sync();
-  done();
+ 
 })
 },5000)
 
 setTimeout(()=>{
-afterAll(async (done) => {
+afterAll(async () => {
   await db.drop();
-  done();
+ 
 })
 },5000)
 
 
 
-xdescribe('Auth Router', () => {
+describe('Auth Router', () => {
 
   Object.keys(users).forEach(userType => {
 
     describe(`${userType} users`, () => {
 
-      it('can create one', async (done) => {
+      it('can create one', async () => {
 
         const response = await mockRequest.post('/signup').send(users[userType]);
         const userObject = response.body;
@@ -45,10 +45,10 @@ xdescribe('Auth Router', () => {
         expect(userObject.token).toBeDefined();
         expect(userObject.user.id).toBeDefined();
         expect(userObject.user.username).toEqual(users[userType].username)
-        done();
+       
       });
 
-      it('can signin with basic', async (done) => {
+      it('can signin with basic', async () => {
 
         const response = await mockRequest.post('/signin')
           .auth(users[userType].username, users[userType].password);
@@ -58,10 +58,10 @@ xdescribe('Auth Router', () => {
         expect(userObject.token).toBeDefined();
         expect(userObject.user.id).toBeDefined();
         expect(userObject.user.username).toEqual(users[userType].username)
-        done();
+       
       });
 
-      it('can signin with bearer', async (done) => {
+      it('can signin with bearer', async () => {
 
         // First, use basic to login to get a token
         const response = await mockRequest.post('/signin')
@@ -76,13 +76,13 @@ xdescribe('Auth Router', () => {
 
         // Not checking the value of the response, only that we "got in"
         expect(bearerResponse.status).toBe(200);
-        done();
+       
       });
 
     });
   })
-    xdescribe('bad logins', () => {
-      it('basic fails with known user and wrong password ', async (done) => {
+    describe('bad logins', () => {
+      it('basic fails with known user and wrong password ', async () => {
 
         const response = await mockRequest.post('/signin')
           .auth('admin', 'xyz')
@@ -91,10 +91,10 @@ xdescribe('Auth Router', () => {
         expect(response.status).toBe(403);
         expect(userObject.user).not.toBeDefined();
         expect(userObject.token).not.toBeDefined();
-        done();
+       
       });
 
-      it('basic fails with unknown user', async (done) => {
+      it('basic fails with unknown user', async () => {
 
         const response = await mockRequest.post('/signin')
           .auth('nobody', 'xyz')
@@ -103,10 +103,10 @@ xdescribe('Auth Router', () => {
         expect(response.status).toBe(403);
         expect(userObject.user).not.toBeDefined();
         expect(userObject.token).not.toBeDefined()
-        done();
+       
       });
 
-      it('bearer fails with an invalid token', async (done) => {
+      it('bearer fails with an invalid token', async () => {
 
         // First, use basic to login to get a token
         const bearerResponse = await mockRequest
@@ -115,7 +115,7 @@ xdescribe('Auth Router', () => {
 
         // Not checking the value of the response, only that we "got in"
         expect(bearerResponse.status).toBe(403);
-        done();
+       
       })
     })
 

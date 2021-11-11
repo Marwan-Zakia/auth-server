@@ -12,19 +12,19 @@ let userInfo = {
 
 // Pre-load our database with fake users
 setTimeout(()=>{
-beforeAll(async (done) => {
+beforeAll(async () => {
   await db.sync();
   await users.create(userInfo.admin);
-  done();
+  
 })
 },5000)
 setTimeout(()=>{
-afterAll(async (done) => {
+afterAll(async () => {
   await db.drop();
-  done();
+  
 })
 },5000)
-xdescribe('Auth Middleware', () => {
+describe('Auth Middleware', () => {
 
   // Mock the express req/res/next that we need for each middleware call
   const req = {};
@@ -34,7 +34,7 @@ xdescribe('Auth Middleware', () => {
   }
   const next = jest.fn();
 
-  xdescribe('user authentication', () => {
+  describe('user authentication', () => {
 
     it('fails a login for a user (admin) with an incorrect token', () => {
 
@@ -44,8 +44,8 @@ xdescribe('Auth Middleware', () => {
 
       return middleware(req, res, next)
         .then(() => {
-          // expect(next).not.toHaveBeenCalled();
-          // expect(res.status).toHaveBeenCalledWith(403);
+           expect(next).not.toHaveBeenCalled();
+          expect(res.status).toHaveBeenCalledWith(403);
         });
 
     });
@@ -61,7 +61,7 @@ xdescribe('Auth Middleware', () => {
 
       return middleware(req, res, next)
         .then(() => {
-          // expect(next).toHaveBeenCalledWith();
+           expect(next).toHaveBeenCalledWith();
         });
 
     });
